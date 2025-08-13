@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Voice Agent Playground</title>
+</head>
+<body>
+  <h2>Text to Speech with Murf</h2>
+
+  <input type="text" id="text-input" placeholder="Type something..." />
+  <button onclick="generateAudio()">Generate Audio</button>
+
+  <br><br>
+
+  <audio id="audio-player" controls style="display: none;"></audio>
+
+  <hr>
+
+  <h1>Conversational Agent</h1>
+
+  <button id="start-record-btn">Start Recording</button>
+  <button id="stop-record-btn" disabled>Stop Recording</button>
+  <button id="stop-bot-btn" style="display: none;">Stop Bot</button>
+
+  <br><br>
+
+  <audio id="echo-audio" controls style="display: none;"></audio>
+
+  <p id="upload-status" style="font-weight: bold;"></p>
+  <p id="transcription" style="font-style: italic; white-space: pre-line;"></p>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
