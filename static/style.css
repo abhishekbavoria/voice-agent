@@ -1,0 +1,78 @@
+/* General Body Styling */
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f9;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    margin: 0;
+  }
+  
+  h1 {
+    color: #444;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Main Record Button */
+  #record-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ff4b5c;
+    color: white;
+    font-size: 1rem;
+    padding: 0.8rem 1.4rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    outline: none;
+    transition: background 0.3s ease;
+  }
+  
+  #record-btn:hover {
+    background: #e63e4f;
+  }
+  
+  #record-btn.recording {
+    background: #ff3131;
+    animation: pulse 1s infinite ease-in-out;
+  }
+  
+  #record-btn i {
+    margin-right: 8px;
+    font-size: 1.2rem;
+  }
+  
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 75, 92, 0.7); }
+    70% { box-shadow: 0 0 0 20px rgba(255, 75, 92, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 75, 92, 0); }
+  }
+  
+  /* Secondary Button */
+  .secondary-btn {
+    margin-top: 1rem;
+    padding: 0.6rem 1.2rem;
+    background: #666;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .secondary-btn i {
+    margin-right: 6px;
+  }
+  
+  .secondary-btn:hover {
+    background: #555;
+  }
+  
+  /* Status Text */
+  #status {
+    margin-top: 1rem;
+    font-weight: bold;
+  }
+  

@@ -3,33 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Voice Agent Playground</title>
+  <title>Conversational Voice Agent</title>
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="/static/style.css">
+
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
-  <h2>Text to Speech with Murf</h2>
+  <h1>Conversational Voice Agent</h1>
 
-  <input type="text" id="text-input" placeholder="Type something..." />
-  <button onclick="generateAudio()">Generate Audio</button>
+  <!-- Record/Stop Button -->
+  <button id="record-btn">
+    <i class="fa-solid fa-microphone"></i> Start Recording
+  </button>
 
-  <br><br>
+  <!-- Stop Agent Button -->
+  <button id="stop-agent-btn" class="secondary-btn" style="display: none;">
+    <i class="fa-solid fa-stop"></i> Stop Agent
+  </button>
 
-  <audio id="audio-player" controls style="display: none;"></audio>
+  <!-- Status -->
+  <p id="status">Idle</p>
 
-  <hr>
+  <!-- Hidden audio playback -->
+  <audio id="echo-audio" style="display: none;"></audio>
 
-  <h1>Conversational Agent</h1>
-
-  <button id="start-record-btn">Start Recording</button>
-  <button id="stop-record-btn" disabled>Stop Recording</button>
-  <button id="stop-bot-btn" style="display: none;">Stop Bot</button>
-
-  <br><br>
-
-  <audio id="echo-audio" controls style="display: none;"></audio>
-
-  <p id="upload-status" style="font-weight: bold;"></p>
-  <p id="transcription" style="font-style: italic; white-space: pre-line;"></p>
-
+  <!-- JS -->
   <script src="/static/script.js"></script>
 </body>
 </html>
