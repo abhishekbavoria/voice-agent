@@ -4,9 +4,9 @@ Talk to an AI that listens to you and talks back, all in your browser. No transc
 
 What is this?
 
-This is a little project that lets you have real spoken conversations with an AI. You click a button, start talking, and the bot listens and replies — in a real human-like voice.
+This is a little project that lets you have real spoken conversations with an AI. You click a button, start talking, and the bot listens and replies, in a real human-like voice.
 
-   - You don’t need to read anything — all responses are played back as audio.
+   - You don’t need to read anything, all responses are played back as audio.
 
    - The experience is completely voice-driven.
 
@@ -33,7 +33,7 @@ What did I build?
 
    - A backend that connects to AssemblyAI (speech-to-text), Gemini (AI chatbot), and Murf AI (text-to-speech).
 
-   - Smart error handling — if anything fails, you hear a friendly fallback message.
+   - Smart error handling, if anything fails, you hear a friendly fallback message.
 
    - Easy way to stop the agent so it doesn’t keep listening forever.
 
@@ -100,6 +100,6 @@ Screenshots
 
 That’s it!
 
-I built this for fun (and learning), but it could be a base for much more — like a customer support bot or a hands-free productivity tool.
+I built this for fun (and learning), but it could be a base for much more, like a customer support bot or a hands-free productivity tool.
 
 If you have questions or ideas, feel free to open an issue or message me!
