@@ -1,7 +1,9 @@
 Conversational Voice Agent
+
 Talk to an AI that listens to you and talks back, all in your browser. No transcripts, just a natural voice conversation.
 
 What is this?
+
 This is a little project that lets you have real spoken conversations with an AI. You click a button, start talking, and the bot listens and replies — in a real human-like voice.
 
    - You don’t need to read anything — all responses are played back as audio.
@@ -11,6 +13,7 @@ This is a little project that lets you have real spoken conversations with an AI
    - Stop the conversation anytime you want.
 
 How does it work?
+
 Every time you speak:
 
    1. Your voice is recorded in your browser and sent to the backend.
@@ -35,33 +38,43 @@ What did I build?
    - Easy way to stop the agent so it doesn’t keep listening forever.
 
 Can I try it or run it on my computer?
+
 Yes! Here’s how:
 
    1. Clone the repo:
 
    git clone https://github.com/abhishekbavoria/voice-agent.git
+
    cd voice-agent
    
    2. Set up Python & environment:
 
    python -m venv venv
+
    source venv/bin/activate         # Mac/Linux
+
    venv\Scripts\activate            # Windows
+
    pip install -r requirements.txt
 
    3. Add a .env file to the project folder:
+
    (Get your free API keys from the service websites)
 
    MURF_API_KEY=your_murf_api_key
+
    ASSEMBLYAI_API_KEY=your_assemblyai_api_key
+
    GEMINI_API_KEY=your_gemini_api_key
 
    4. Start the server:
 
    uvicorn app:app --reload
+
    Then open your browser at http://localhost:8000
 
    5. Talk to your AI!
+
    Click "Start Recording", say something, and hear what the agent says back.
 
 What do I need to run this?
@@ -82,9 +95,11 @@ Want to customize?
 
 Screenshots
 ![Main UI](static/UI-Screenshot.png)
+
 ![Conversation Flow](static/Conversational-Screenshot.png)
 
 That’s it!
+
 I built this for fun (and learning), but it could be a base for much more — like a customer support bot or a hands-free productivity tool.
 
 If you have questions or ideas, feel free to open an issue or message me!
