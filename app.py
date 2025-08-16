@@ -2,7 +2,7 @@ import os
 import time
 import logging
 
-from fastapi import FastAPI, Request, UploadFile, File, Path
+from fastapi import FastAPI, Request, UploadFile, File, Path, WebSocket
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -71,3 +71,13 @@ async def agent_chat(session_id: str = Path(...), file: UploadFile = File(...)):
 
 def generate_fallback_audio():
     return "/static/fallback.mp3"
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    try:
+        while True:
+            data = await websocket.receive_text()
+            await websocket.send_text(f"Echo: {data}")
+    except Exception as e:
+        await websocket.close()
