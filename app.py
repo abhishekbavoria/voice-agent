@@ -13,6 +13,7 @@ from schemas import AgentChatResponse
 from services.stt import transcribe_audio
 from services.llm import get_ai_reply
 from services.tts import synthesize_audio
+import datetime
 
 load_dotenv()
 
@@ -72,12 +73,18 @@ async def agent_chat(session_id: str = Path(...), file: UploadFile = File(...)):
 def generate_fallback_audio():
     return "/static/fallback.mp3"
 
-@app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
+@app.websocket("/ws/audio")
+async def websocket_audio(websocket: WebSocket):
     await websocket.accept()
-    try:
-        while True:
-            data = await websocket.receive_text()
-            await websocket.send_text(f"Echo: {data}")
-    except Exception as e:
-        await websocket.close()
+    os.makedirs("uploads", exist_ok=True)
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    audio_path = f"uploads/streamed_{timestamp}.webm"
+
+    with open(audio_path, "wb") as audio_file:
+        try:
+            while True:
+                chunk = await websocket.receive_bytes()
+                audio_file.write(chunk)
+        except Exception as e:
+            await websocket.close()
+    print(f"Saved audio stream as {audio_path}")

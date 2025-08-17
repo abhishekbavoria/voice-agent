@@ -1,25 +1,10 @@
 let mediaRecorder;
-let audioChunks = [];
+let ws;
 let isRecording = false;
-let botActive = true;
-let sessionId = getOrCreateSessionId();
 
 const recordBtn = document.getElementById("record-btn");
 const stopAgentBtn = document.getElementById("stop-agent-btn");
 const statusEl = document.getElementById("status");
-const echoAudio = document.getElementById("echo-audio");
-
-function getOrCreateSessionId() {
-    const urlParams = new URLSearchParams(window.location.search);
-    let id = urlParams.get("session_id");
-
-    if (!id) {
-        id = Math.random().toString(36).substring(2, 12);
-        urlParams.set("session_id", id);
-        window.history.replaceState({}, "", `${location.pathname}?${urlParams}`);
-    }
-    return id;
-}
 
 // Toggle recording
 recordBtn.addEventListener("click", async () => {
@@ -27,89 +12,71 @@ recordBtn.addEventListener("click", async () => {
         stopRecording();
         recordBtn.innerHTML = '<i class="fa-solid fa-microphone"></i> Start Recording';
     } else {
-        startRecording();
+        startWebSocketAndRecording();
         recordBtn.innerHTML = '<i class="fa-solid fa-stop"></i> Stop Recording';
-        botActive = true;
-        stopAgentBtn.style.display = "inline-block"; // Show stop agent button
+        stopAgentBtn.style.display = "inline-block";
     }
 });
 
 // Stop Agent button
 stopAgentBtn.addEventListener("click", () => {
-    botActive = false; // Prevent auto-restarts
-    isRecording = false;
+    stopRecording();
     stopAgentBtn.style.display = "none";
     recordBtn.classList.remove("recording");
     recordBtn.innerHTML = '<i class="fa-solid fa-microphone"></i> Start Recording';
     statusEl.textContent = "Stopped";
 });
 
-async function startRecording() {
-    botActive = true;
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+function startWebSocketAndRecording() {
+    ws = new WebSocket("ws://localhost:8000/ws/audio");
+
+    ws.binaryType = "arraybuffer";
+
+    ws.onopen = async () => {
+        statusEl.textContent = "Recording...";
+        startRecording();
+    };
+
+    ws.onclose = () => {
+        statusEl.textContent = "Stopped";
+        isRecording = false;
+    };
+
+    ws.onerror = (err) => {
+        statusEl.textContent = "WebSocket Error";
+        console.error("WebSocket error:", err);
+        stopRecording();
+    };
+}
+
+function startRecording() {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
         mediaRecorder = new MediaRecorder(stream);
-        audioChunks = [];
 
         mediaRecorder.ondataavailable = event => {
-            if (event.data.size > 0) {
-                audioChunks.push(event.data);
-            }
-        };
-
-        mediaRecorder.onstop = async () => {
-            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-            const formData = new FormData();
-            formData.append("file", audioBlob, "user_input.webm");
-
-            statusEl.textContent = "Thinking...";
-
-            try {
-                const response = await fetch(`/agent/chat/${sessionId}`, {
-                    method: "POST",
-                    body: formData
+            if (event.data.size > 0 && ws && ws.readyState === WebSocket.OPEN) {
+                event.data.arrayBuffer().then(buffer => {
+                    ws.send(buffer); // Send chunk to server
                 });
-
-                const result = await response.json();
-
-                if (response.ok && !result.error) {
-                    statusEl.textContent = "Speaking...";
-                    echoAudio.src = result.audio_url;
-                    echoAudio.play();
-
-                    echoAudio.onended = () => {
-                        statusEl.textContent = "Idle";
-                        if (botActive) {
-                            startRecording(); // Continue conversation loop
-                            recordBtn.innerHTML = '<i class="fa-solid fa-stop"></i> Stop Recording';
-                            recordBtn.classList.add("recording");
-                        }
-                    };                    
-                } else {
-                    statusEl.textContent = "Error";
-                    echoAudio.src = "/static/fallback.mp3";
-                    echoAudio.play();
-                    botActive = false;
-                    stopAgentBtn.style.display = "none";
-                }
-            } catch (err) {
-                console.error("LLM pipeline error:", err);
-                statusEl.textContent = "Network/Processing error.";
-                echoAudio.src = "/static/fallback.mp3";
-                echoAudio.play();
-                botActive = false;
-                stopAgentBtn.style.display = "none";
             }
         };
 
-        mediaRecorder.start();
+        mediaRecorder.onstop = () => {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.close();
+            }
+            statusEl.textContent = "Stopped";
+        };
+
+        mediaRecorder.start(300); // Emit dataavailable every 300ms
         isRecording = true;
         recordBtn.classList.add("recording");
         statusEl.textContent = "Recording...";
-    } catch (err) {
+    }).catch(err => {
         console.error("Microphone access error:", err);
         alert("Please allow microphone access to use the voice agent.");
-    }
+        statusEl.textContent = "Mic Error";
+    });
 }
 
 function stopRecording() {
@@ -118,5 +85,8 @@ function stopRecording() {
         isRecording = false;
         recordBtn.classList.remove("recording");
         statusEl.textContent = "Processing...";
+    }
+    if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.close();
     }
 }
